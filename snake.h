@@ -50,6 +50,7 @@ typedef struct {
     float        frame_size;
     t_snake_node body;
     t_treat      treat;
+    int          moved;
 } t_snake;
 
 

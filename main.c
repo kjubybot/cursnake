@@ -19,6 +19,9 @@ int main() {
     noecho();
     nodelay(win, TRUE);
     curs_set(0);
+    start_color();
+    init_pair(1, 0, 28); // green
+    init_pair(2, 0, 21); // blue
 
     snake.body.next = &snake.body;
     snake.body.prev = &snake.body;
@@ -26,6 +29,7 @@ int main() {
     snake.dir = RIGHT;
     snake.speed = INIT_SPEED;
     snake.frame_size = 1.;
+    snake.moved = 1;
 
     t_snake_node *node = new_node(SCREEN_W >> 1, SCREEN_H >> 1);
     if (!node)
