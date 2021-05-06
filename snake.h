@@ -11,13 +11,15 @@
 #define SCREEN_W 80
 #define SCREEN_H 60
 
-#define DELTA      0.04
+#define DELTA      0.05
 #define INIT_SPEED 5.
 
 #define SNAKE_HEAD(x) x->body.next
 #define SNAKE_BACK(x) x->body.prev
 
 #define LOSE_MSG "Lose. Press 'r' to retry"
+
+#define SNAKE_COLORS 213
 
 enum Dir {
     UP,
@@ -34,6 +36,7 @@ enum State {
 typedef struct {
     int x;
     int y;
+    int color;
 } t_treat;
 
 typedef struct s_snake_node {
@@ -51,6 +54,7 @@ typedef struct {
     t_snake_node body;
     t_treat      treat;
     int          moved;
+    int          color;
 } t_snake;
 
 

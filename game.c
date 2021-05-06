@@ -3,6 +3,7 @@
 void spawn_treat(t_treat *treat) {
     treat->x = rand() % (SCREEN_W - 2) + 1;
     treat->y = rand() % (SCREEN_H - 2) + 1;
+    treat->color = rand() % SNAKE_COLORS + 1;
 }
 
 void process_keys(t_snake *snake, WINDOW *win) {
@@ -14,16 +15,16 @@ void process_keys(t_snake *snake, WINDOW *win) {
         if (snake->state == PLAY) {
             if (!snake->moved) { // if previous move was not executed, put it in queue
                 ungetch(ch);
-            } else if (ch == 'w' && snake->dir != DOWN) {
+            } else if (ch == 'w' && snake->dir != DOWN && snake->dir != UP) {
                 snake->dir = UP;
                 snake->moved = 0;
-            } else if (ch == 'a' && snake->dir != RIGHT) {
+            } else if (ch == 'a' && snake->dir != RIGHT && snake->dir != LEFT) {
                 snake->dir = LEFT;
                 snake->moved = 0;
-            } else if (ch == 's' && snake->dir != UP) {
+            } else if (ch == 's' && snake->dir != UP && snake->dir != DOWN) {
                 snake->dir = DOWN;
                 snake->moved = 0;
-            } else if (ch == 'd' && snake->dir != LEFT) {
+            } else if (ch == 'd' && snake->dir != LEFT && snake->dir != RIGHT) {
                 snake->dir = RIGHT;
                 snake->moved = 0;
             }
@@ -49,9 +50,9 @@ void draw(t_snake *snake, WINDOW *win) {
     box(win, 0, 0);
 
     if (snake->state == PLAY) {
-        wcolor_set(win, 2, 0);
+        wcolor_set(win, snake->treat.color, 0);
         mvwaddch(win, snake->treat.y, snake->treat.x, ' ');
-        wcolor_set(win, 1, 0);
+        wcolor_set(win, snake->color, 0);
         for (t_snake_node *n = SNAKE_HEAD(snake); n != &snake->body; n = n->next)
             mvwaddch(win, n->y, n->x, ' ');
     } else if (snake->state == LOSE) {
@@ -92,8 +93,9 @@ void loop(t_snake *snake, WINDOW *win) {
                     if (!node)
                         bye(snake, win);
                     add_node(&snake->body, node);
-                    spawn_treat(&snake->treat);
                     snake->speed += 0.5;
+                    snake->color = snake->treat.color;
+                    spawn_treat(&snake->treat);
                 }
                 move_snake(snake);
                 snake->frame_size = 0.;
@@ -105,6 +107,6 @@ void loop(t_snake *snake, WINDOW *win) {
             }
         }
         draw(snake, win);
-        usleep(40000);
+        usleep(50000);
     }
 }

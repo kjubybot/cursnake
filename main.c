@@ -9,9 +9,15 @@ void bye(t_snake *snake, WINDOW *win) {
     exit(0);
 }
 
+void init_colors() {
+    for (int i = 0; i < SNAKE_COLORS; i++)
+        init_pair(i + 1, 0, i + 17);
+}
+
 int main() {
     t_snake snake;
     WINDOW *win;
+    srand(time(0));
 
     initscr();
     win = newwin(SCREEN_H, SCREEN_W, 0, 0);
@@ -20,8 +26,7 @@ int main() {
     nodelay(win, TRUE);
     curs_set(0);
     start_color();
-    init_pair(1, 0, 28); // green
-    init_pair(2, 0, 21); // blue
+    init_colors();
 
     snake.body.next = &snake.body;
     snake.body.prev = &snake.body;
@@ -30,13 +35,13 @@ int main() {
     snake.speed = INIT_SPEED;
     snake.frame_size = 1.;
     snake.moved = 1;
+    snake.color = 1;
 
     t_snake_node *node = new_node(SCREEN_W >> 1, SCREEN_H >> 1);
     if (!node)
         bye(&snake, win);
     add_node(&snake.body, node);
 
-    srand(time(0));
     spawn_treat(&snake.treat);
     signal(SIGINT, SIG_IGN);
     loop(&snake, win);
